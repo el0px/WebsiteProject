@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Royal Detailing — Admin</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #eee;
+      min-height: 100vh;
+    }
+
+    /* ── LOGIN SCREEN ── */
+    #login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .login-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 40px;
+      width: 360px;
+      text-align: center;
+    }
+
+    .login-box h1 { font-size: 22px; margin-bottom: 6px; color: #fff; }
+    .login-box p  { color: #888; font-size: 14px; margin-bottom: 28px; }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px 16px;
+      background: #262626;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 13px;
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .login-box button:hover { background: #6d28d9; }
+    .login-error { color: #f87171; font-size: 13px; margin-top: 10px; }
+
+    /* ── ADMIN DASHBOARD ── */
+    #dashboard { display: none; }
+
+    header {
+      background: #1a1a1a;
+      border-bottom: 1px solid #333;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 { font-size: 18px; color: #fff; }
+    header span { color: #888; font-size: 13px; }
+
+    .logout-btn {
+      background: transparent;
+      border: 1px solid #444;
+      color: #aaa;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .logout-btn:hover { border-color: #888; color: #fff; }
+
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 0;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      color: #888;
+      font-size: 14px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+
+    .tab-btn.active { color: #a78bfa; border-bottom-color: #7c3aed; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .section-header h2 { font-size: 17px; color: #fff; }
+
+    /* ── BOOKINGS ── */
+    .booking-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 14px;
+    }
+
+    .booking-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .booking-name { font-size: 16px; font-weight: 700; color: #fff; }
+    .booking-meta { color: #888; font-size: 13px; margin-top: 4px; }
+    .booking-service {
+      display: inline-block;
+      background: #5b21b6;
+      color: #fff;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-pending  { background: #92400e22; color: #fbbf24; border: 1px solid #92400e; }
+    .status-confirmed { background: #06522022; color: #34d399; border: 1px solid #065220; }
+    .status-rejected  { background: #7f1d1d22; color: #f87171; border: 1px solid #7f1d1d; }
+
+    .booking-actions { display: flex; gap: 8px; margin-top: 14px; }
+
+    .btn-confirm {
+      padding: 7px 18px;
+      background: #065f46;
+      color: #34d399;
+      border: 1px solid #065f46;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .btn-confirm:hover { background: #047857; }
+
+    .btn-reject {
+      padding: 7px 18px;
+      background: #7f1d1d;
+      color: #f87171;
+      border: 1px solid #7f1d1d;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .btn-reject:hover { background: #991b1b; }
+
+    .booking-detail {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #2a2a2a;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .detail-item label { color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; }
+    .detail-item span  { color: #ccc; font-size: 13px; }
+
+    /* ── BLOCKED DATES ── */
+    .block-form {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .block-form .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .block-form label { color: #888; font-size: 13px; }
+
+    .block-form input {
+      padding: 10px 14px;
+      background: #262626;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .btn-block {
+      padding: 10px 20px;
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-block:hover { background: #6d28d9; }
+
+    .blocked-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .blocked-item {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .blocked-date { font-weight: 600; color: #fff; }
+    .blocked-reason { color: #888; font-size: 13px; margin-top: 2px; }
+
+    .btn-unblock {
+      padding: 6px 14px;
+      background: transparent;
+      border: 1px solid #444;
+      color: #888;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .btn-unblock:hover { border-color: #f87171; color: #f87171; }
+
+    .empty-state {
+      text-align: center;
+      color: #555;
+      padding: 40px;
+      font-size: 14px;
+    }
+
+    .filter-btns { display: flex; gap: 8px; }
+    .filter-btn {
+      padding: 6px 14px;
+      background: #262626;
+      border: 1px solid #333;
+      color: #888;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .filter-btn.active { background: #5b21b6; border-color: #5b21b6; color: #fff; }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>Royal Detailing</h1>
+    <p>Admin Dashboard — Enter your password</p>
+    <input type="password" id="password-input" placeholder="Password" />
+    <button onclick="login()">Sign In</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+  <header>
+    <div>
+      <h1>Royal Detailing — Admin</h1>
+      <span id="header-date"></span>
+    </div>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </header>
+
+  <div class="main">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('bookings', this)">Bookings</button>
+      <button class="tab-btn" onclick="switchTab('blocked', this)">Blocked Dates</button>
+    </div>
+
+    <!-- Bookings Tab -->
+    <div class="tab-panel active" id="tab-bookings">
+      <div class="section-header">
+        <h2>All Bookings</h2>
+        <div class="filter-btns">
+          <button class="filter-btn active" onclick="filterBookings('all', this)">All</button>
+          <button class="filter-btn" onclick="filterBookings('pending', this)">Pending</button>
+          <button class="filter-btn" onclick="filterBookings('confirmed', this)">Confirmed</button>
+          <button class="filter-btn" onclick="filterBookings('rejected', this)">Rejected</button>
+        </div>
+      </div>
+      <div id="bookings-list"><div class="empty-state">Loading bookings...</div></div>
+    </div>
+
+    <!-- Blocked Dates Tab -->
+    <div class="tab-panel" id="tab-blocked">
+      <div class="section-header">
+        <h2>Blocked Dates</h2>
+      </div>
+
+      <div class="block-form">
+        <div class="form-group">
+          <label>Date to Block</label>
+          <input type="date" id="block-date" />
+        </div>
+        <div class="form-group">
+          <label>Reason (optional)</label>
+          <input type="text" id="block-reason" placeholder="e.g. School event, Busy day..." style="width: 260px;" />
+        </div>
+        <button class="btn-block" onclick="blockDate()">Block Date</button>
+      </div>
+
+      <div id="blocked-list"><div class="empty-state">Loading...</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let adminToken  = '';
+  let allBookings = [];
+  let currentFilter = 'all';
+
+  const apiBase = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000'
+    : '';
+
+  // ── LOGIN ──
+  function login() {
+    const pw = document.getElementById('password-input').value;
+    if (!pw) return;
+    adminToken = pw;
+    loadDashboard();
+  }
+
+  document.getElementById('password-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+
+  function logout() {
+    adminToken = '';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('password-input').value = '';
+  }
+
+  // ── LOAD DASHBOARD ──
+  async function loadDashboard() {
+    const res = await fetch(`${apiBase}/admin/bookings`, {
+      headers: { 'x-admin-token': adminToken }
+    });
+
+    if (res.status === 401) {
+      document.getElementById('login-error').textContent = 'Wrong password. Try again.';
+      adminToken = '';
+      return;
+    }
+
+    document.getElementById('login-error').textContent = '';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('header-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    const data = await res.json();
+    allBookings = data.bookings;
+    renderBookings(allBookings);
+    loadBlockedDates();
+  }
+
+  // ── BOOKINGS ──
+  function filterBookings(status, btn) {
+    currentFilter = status;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filtered = status === 'all' ? allBookings : allBookings.filter(b => b.status === status);
+    renderBookings(filtered);
+  }
+
+  function renderBookings(bookings) {
+    const list = document.getElementById('bookings-list');
+    if (!bookings.length) {
+      list.innerHTML = '<div class="empty-state">No bookings found.</div>';
+      return;
+    }
+
+    list.innerHTML = bookings.map(b => {
+      const date = b.date ? formatDate(b.date) : 'No date';
+      const isPending = b.status === 'pending';
+      return `
+        <div class="booking-card" id="booking-${b.id}">
+          <div class="booking-top">
+            <div>
+              <div class="booking-name">${b.name}</div>
+              <div class="booking-meta">${b.contact} · ${date} · ${b.time || 'No time'}</div>
+              <div class="booking-service">${b.service_type || 'Unknown service'}</div>
+            </div>
+            <span class="status-badge status-${b.status}">${b.status.charAt(0).toUpperCase() + b.status.slice(1)}</span>
+          </div>
+          <div class="booking-detail">
+            <div class="detail-item"><label>Vehicle</label><span>${b.vehicle || '—'}</span></div>
+            <div class="detail-item"><label>Add-ons</label><span>${b.addons || 'None'}</span></div>
+            <div class="detail-item"><label>Condition</label><span>${b.condition || '—'}</span></div>
+            <div class="detail-item"><label>Submitted</label><span>${new Date(b.created_at).toLocaleDateString()}</span></div>
+            ${b.notes ? `<div class="detail-item" style="grid-column: 1/-1;"><label>Notes</label><span>${b.notes}</span></div>` : ''}
+          </div>
+          ${isPending ? `
+          <div class="booking-actions">
+            <button class="btn-confirm" onclick="updateBooking(${b.id}, 'confirmed')">✓ Confirm</button>
+            <button class="btn-reject"  onclick="updateBooking(${b.id}, 'rejected')">✗ Reject</button>
+          </div>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function updateBooking(id, status) {
+    const res = await fetch(`${apiBase}/admin/bookings/${id}`, {
+      method:  'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': adminToken },
+      body:    JSON.stringify({ status })
+    });
+
+    if (res.ok) {
+      // Update locally without full reload
+      allBookings = allBookings.map(b => b.id === id ? { ...b, status } : b);
+      const filtered = currentFilter === 'all' ? allBookings : allBookings.filter(b => b.status === currentFilter);
+      renderBookings(filtered);
+    }
+  }
+
+  // ── BLOCKED DATES ──
+  async function loadBlockedDates() {
+    const res  = await fetch(`${apiBase}/blocked-dates`);
+    const data = await res.json();
+    renderBlockedDates(data.dates);
+  }
+
+  function renderBlockedDates(dates) {
+    const list = document.getElementById('blocked-list');
+    if (!dates.length) {
+      list.innerHTML = '<div class="empty-state">No dates blocked. Use the form above to block a day off.</div>';
+      return;
+    }
+    list.innerHTML = `<div class="blocked-list">${dates.map(d => `
+      <div class="blocked-item">
+        <div>
+          <div class="blocked-date">${formatDate(d.date)}</div>
+          ${d.reason ? `<div class="blocked-reason">${d.reason}</div>` : ''}
+        </div>
+        <button class="btn-unblock" onclick="unblockDate('${d.date}')">Remove</button>
+      </div>
+    `).join('')}</div>`;
+  }
+
+  async function blockDate() {
+    const date   = document.getElementById('block-date').value;
+    const reason = document.getElementById('block-reason').value;
+    if (!date) return alert('Please pick a date to block.');
+
+    await fetch(`${apiBase}/admin/blocked-dates`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': adminToken },
+      body:    JSON.stringify({ date, reason })
+    });
+
+    document.getElementById('block-date').value   = '';
+    document.getElementById('block-reason').value = '';
+    loadBlockedDates();
+  }
+
+  async function unblockDate(date) {
+    await fetch(`${apiBase}/admin/blocked-dates/${date}`, {
+      method:  'DELETE',
+      headers: { 'x-admin-token': adminToken }
+    });
+    loadBlockedDates();
+  }
+
+  // ── TABS ──
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`tab-${name}`).classList.add('active');
+  }
+
+  // ── HELPERS ──
+  function formatDate(dateStr) {
+    if (!dateStr) return 'Not specified';
+    const [year, month, day] = dateStr.split('-');
+    const months = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    return `${months[parseInt(month) - 1]} ${parseInt(day)}, ${year}`;
+  }
+
+  // Set min date on block date picker
+  document.getElementById('block-date').min = new Date().toISOString().split('T')[0];
+</script>
+
+</body>
+</html>
