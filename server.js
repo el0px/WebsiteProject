@@ -63,6 +63,11 @@ function formatDate(dateStr) {
   return `${months[parseInt(month, 10) - 1]} ${parseInt(day, 10)}, ${year}`;
 }
 
+// Serve admin page
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
 // ── PUBLIC: Get blocked dates (for the booking form calendar) ──
 app.get('/blocked-dates', async (req, res) => {
   const { data, error } = await supabase
