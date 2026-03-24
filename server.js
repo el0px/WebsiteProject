@@ -256,19 +256,23 @@ app.post('/book', async (req, res) => {
   `;
 
   try {
-    await resend.emails.send({
+    const { error: bizEmailError } = await resend.emails.send({
       from:    'Royal Detailing Bookings <bookings@royal-detailing.org>',
       to:      process.env.EMAIL_TO,
       subject: `New Booking — ${name} | ${serviceLabel}`,
       html:    businessHtml,
     });
+    if (bizEmailError) console.error('Business email error:', JSON.stringify(bizEmailError));
+    else console.log('Business email sent to:', process.env.EMAIL_TO);
 
-    await resend.emails.send({
+    const { error: custEmailError } = await resend.emails.send({
       from:    'Royal Detailing <bookings@royal-detailing.org>',
       to:      contact,
       subject: 'Booking Request Received — Royal Detailing',
       html:    confirmationHtml,
     });
+    if (custEmailError) console.error('Customer email error:', JSON.stringify(custEmailError));
+    else console.log('Customer email sent to:', contact);
 
     // Send SMS to business
     await sendSMS(process.env.BUSINESS_PHONE,
