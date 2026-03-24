@@ -17,6 +17,7 @@
     "express": "^5.2.1",
     "nodemailer": "^8.0.3",
     "resend": "^6.9.4",
-    "@supabase/supabase-js": "^2.49.4"
+    "@supabase/supabase-js": "^2.49.4",
+    "twilio": "^5.4.0"
   }
 }
