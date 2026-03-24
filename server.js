@@ -219,7 +219,7 @@ app.post('/book', async (req, res) => {
         </div>
       </div>
       <div style="padding: 20px 32px; background: #f9f9f9; border-top: 1px solid #eee;">
-        <p style="margin: 0; color: #999; font-size: 12px;">Royal Detailing · Franklin Park / Bensenville · (872) 400-1491</p>
+        <p style="margin: 0; color: #999; font-size: 12px;">Royal Detailing · Franklin Park / Bensenville · (708) 714-2432</p>
       </div>
     </div>
   `;
@@ -247,7 +247,7 @@ app.post('/book', async (req, res) => {
           ${addonsText !== 'None' ? `<p style="margin: 6px 0; color: #333; font-size: 14px;"><strong>Add-ons:</strong> ${addonsText}</p>` : ''}
         </div>
         <p style="color: #555; font-size: 14px; margin: 0 0 8px;">Questions? Reach us directly:</p>
-        <p style="color: #5b21b6; font-size: 16px; font-weight: 700; margin: 0;">(872) 400-1491 &nbsp;|&nbsp; (224) 391-4351</p>
+        <p style="color: #5b21b6; font-size: 16px; font-weight: 700; margin: 0;">(708) 714-2432 &nbsp;|&nbsp; (224) 391-4351</p>
       </div>
       <div style="padding: 20px 32px; background: #f9f9f9; border-top: 1px solid #eee; text-align: center;">
         <p style="margin: 0; color: #999; font-size: 12px;">Royal Detailing · Franklin Park / Bensenville</p>
@@ -343,7 +343,7 @@ app.patch('/admin/bookings/:id', requireAdmin, async (req, res) => {
             <p style="margin: 6px 0; color: #333; font-size: 14px;"><strong>Date:</strong> ${formattedDate}</p>
             <p style="margin: 6px 0; color: #333; font-size: 14px;"><strong>Vehicle:</strong> ${booking.vehicle || 'Not specified'}</p>
           </div>` : ''}
-          <p style="color: #5b21b6; font-size: 16px; font-weight: 700; margin: 0;">(872) 400-1491 &nbsp;|&nbsp; (224) 391-4351</p>
+          <p style="color: #5b21b6; font-size: 16px; font-weight: 700; margin: 0;">(708) 714-2432 &nbsp;|&nbsp; (224) 391-4351</p>
         </div>
         <div style="padding: 20px 32px; background: #f9f9f9; border-top: 1px solid #eee; text-align: center;">
           <p style="margin: 0; color: #999; font-size: 12px;">Royal Detailing · Franklin Park / Bensenville</p>

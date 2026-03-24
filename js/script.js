@@ -218,9 +218,9 @@ bookingForm.addEventListener('submit', async (event) => {
   } catch (error) {
     // Network error or timeout — couldn't reach the server
     if (error.name === 'AbortError') {
-      alert('The server is taking too long to respond. Please try again in a moment, or call/text us directly at (872) 400-1491.');
+      alert('The server is taking too long to respond. Please try again in a moment, or call/text us directly at (708) 714-2432.');
     } else {
-      alert('Could not connect to the server. Please call or text us directly at (872) 400-1491.');
+      alert('Could not connect to the server. Please call or text us directly at (708) 714-2432.');
     }
     submitButton.innerHTML = originalText;
     submitButton.disabled = false;
