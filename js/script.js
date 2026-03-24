@@ -230,20 +230,57 @@ bookingForm.addEventListener('submit', async (event) => {
 
 
 /* ============================================================
-   6. DATE PICKER — set minimum date to today
+   6. DATE PICKER + AVAILABILITY
 
-   We don't want people booking in the past, so we set the
-   minimum selectable date to today's date.
+   Weekdays (Mon–Fri): available after 3pm (school schedule)
+   Weekends (Sat–Sun): available all day
 
-   toISOString() gives us a string like "2025-03-23T12:00:00Z"
-   .split('T')[0] grabs just the date part: "2025-03-23"
-   That format is what the date input expects.
+   When the user picks a date, we update the time dropdown
+   to only show slots that fit the schedule.
 ============================================================ */
 
-const dateInput = document.getElementById('date');
+const dateInput  = document.getElementById('date');
+const timeSelect = document.getElementById('time');
+
+// Time slots for each day type
+const weekendSlots = [
+  { value: 'morning',   label: 'Morning (8am – 12pm)'   },
+  { value: 'afternoon', label: 'Afternoon (12pm – 4pm)'  },
+  { value: 'evening',   label: 'Evening (4pm – 7pm)'     },
+];
+
+const weekdaySlots = [
+  { value: 'after-school', label: 'After School (3pm – 6pm)' },
+  { value: 'evening',      label: 'Evening (6pm – 8pm)'      },
+];
+
+function updateTimeSlots() {
+  const val = dateInput.value;
+  if (!val) return;
+
+  // getDay() returns 0 = Sunday, 6 = Saturday
+  // We add 'T12:00:00' to avoid timezone issues shifting the day
+  const day = new Date(val + 'T12:00:00').getDay();
+  const isWeekend = (day === 0 || day === 6);
+  const slots = isWeekend ? weekendSlots : weekdaySlots;
+
+  // Rebuild the time dropdown with the correct options
+  timeSelect.innerHTML = '<option value="">Select a time</option>';
+  slots.forEach(slot => {
+    const option = document.createElement('option');
+    option.value = slot.value;
+    option.textContent = slot.label;
+    timeSelect.appendChild(option);
+  });
+}
+
 if (dateInput) {
+  // Block past dates
   const today = new Date().toISOString().split('T')[0];
   dateInput.setAttribute('min', today);
+
+  // Update time slots whenever the date changes
+  dateInput.addEventListener('change', updateTimeSlots);
 }
 
 
