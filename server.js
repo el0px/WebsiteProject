@@ -225,7 +225,6 @@ app.post('/book', async (req, res) => {
   `;
 
   // ── EMAIL 2: Confirmation to the customer ──────────────────────
-  const isEmail   = contact.includes('@');
   const firstName = name.split(' ')[0];
 
   const confirmationHtml = `
@@ -264,26 +263,17 @@ app.post('/book', async (req, res) => {
       html:    businessHtml,
     });
 
-    if (isEmail) {
-      await resend.emails.send({
-        from:    'Royal Detailing <bookings@royal-detailing.org>',
-        to:      contact,
-        subject: 'Booking Request Received — Royal Detailing',
-        html:    confirmationHtml,
-      });
-    }
+    await resend.emails.send({
+      from:    'Royal Detailing <bookings@royal-detailing.org>',
+      to:      contact,
+      subject: 'Booking Request Received — Royal Detailing',
+      html:    confirmationHtml,
+    });
 
     // Send SMS to business
     await sendSMS(process.env.BUSINESS_PHONE,
       `New booking from ${name}!\nService: ${serviceLabel}\nDate: ${formattedDate}\nContact: ${contact}\nVehicle: ${vehicle || 'N/A'}\nCheck admin panel to confirm.`
     );
-
-    // Send SMS to customer if they gave a phone number (not email)
-    if (!isEmail && contact.replace(/\D/g, '').length >= 10) {
-      await sendSMS(contact,
-        `Hi ${firstName}! Royal Detailing received your booking request for ${formattedDate}. We'll confirm within 24 hours. Questions? Call (872) 400-1491.`
-      );
-    }
 
     console.log(`Booking saved and notification sent for: ${name}`);
     res.status(200).json({ success: true, message: 'Booking request received! We will contact you within 24 hours.' });
@@ -363,18 +353,6 @@ app.patch('/admin/bookings/:id', requireAdmin, async (req, res) => {
       subject: isConfirmed ? 'Booking Confirmed — Royal Detailing' : 'Booking Update — Royal Detailing',
       html:    statusHtml,
     });
-  }
-
-  // Send SMS to customer if they gave a phone number
-  const isPhone = !booking.contact.includes('@') && booking.contact.replace(/\D/g, '').length >= 10;
-  if (isPhone) {
-    const firstName     = booking.name.split(' ')[0];
-    const formattedDate = formatDate(booking.date);
-    const serviceLabel  = serviceLabels[booking.service_type] || booking.service_type;
-    const msg = status === 'confirmed'
-      ? `Hi ${firstName}! Your Royal Detailing appointment for ${formattedDate} (${serviceLabel}) is CONFIRMED. See you then! Questions? (872) 400-1491.`
-      : `Hi ${firstName}, unfortunately we can't accommodate your Royal Detailing request for ${formattedDate}. Please call (872) 400-1491 to reschedule.`;
-    await sendSMS(booking.contact, msg);
   }
 
   res.json({ success: true, booking });
