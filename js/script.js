@@ -173,11 +173,27 @@ bookingForm.addEventListener('submit', async (event) => {
       ? 'http://localhost:4000/book'
       : '/book';
 
+    // After 8 seconds, update the button text so the user knows we're still working
+    // (Render free tier can take ~30-60 seconds to wake up from sleep)
+    const slowWarningTimer = setTimeout(() => {
+      if (submitButton.disabled) {
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Almost there...';
+      }
+    }, 8000);
+
+    // AbortController lets us cancel the fetch if it takes too long
+    const controller = new AbortController();
+    const timeoutId  = setTimeout(() => controller.abort(), 90000); // 90 second timeout
+
     const response = await fetch(apiUrl, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify(bookingData),
+      signal:  controller.signal,
     });
+
+    clearTimeout(slowWarningTimer);
+    clearTimeout(timeoutId);
 
     // Parse the JSON response our server sends back
     const result = await response.json();
@@ -205,8 +221,12 @@ bookingForm.addEventListener('submit', async (event) => {
     }
 
   } catch (error) {
-    // Network error — couldn't reach the server at all
-    alert('Could not connect to the server. Please call or text us directly at (872) 400-1491.');
+    // Network error or timeout — couldn't reach the server
+    if (error.name === 'AbortError') {
+      alert('The server is taking too long to respond. Please try again in a moment, or call/text us directly at (872) 400-1491.');
+    } else {
+      alert('Could not connect to the server. Please call or text us directly at (872) 400-1491.');
+    }
     submitButton.innerHTML = originalText;
     submitButton.disabled = false;
   }
