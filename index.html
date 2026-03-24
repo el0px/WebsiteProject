@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!--
+  HEAD SECTION
+  This is metadata - info about the page that the browser needs but the user doesn't see.
+  Things like: what character set to use, how to scale on mobile, the tab title, and linking
+  our CSS file so the page knows where to find its styles.
+-->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Royal Detailing</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Google Fonts - we're loading two fonts from the internet:
+       Cinzel for the royal/elegant headings, Inter for clean readable body text -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <!-- Font Awesome - a library of icons (phone, email, instagram, etc.) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<!--
+  BODY SECTION
+  Everything the user actually sees goes inside <body>.
+  We're using a class "loaded" that JavaScript will add after the page loads
+  to trigger a smooth fade-in animation.
+-->
+<body>
+
+  <!-- ===================== NAVIGATION BAR =====================
+    The nav stays fixed at the top as you scroll.
+    It contains:
+    - The logo/brand name on the left
+    - Navigation links on the right
+    - A hamburger menu icon (3 lines) that appears on mobile screens
+  -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+
+      <!-- Logo area - clicking this scrolls back to the top -->
+      <a href="#home" class="nav-logo">
+        <img src="images/logo.png" alt="Royal Detailing Logo" class="nav-logo-img" onerror="this.style.display='none'" />
+        <span class="logo-royal">Royal</span>
+        <span class="logo-detailing">Detailing</span>
+      </a>
+
+      <!-- Hamburger icon - only visible on mobile. The 3 <span> tags are the 3 lines -->
+      <button class="hamburger" id="hamburger" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Nav links - the href="#section-id" values scroll to that section on click -->
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#home" class="nav-link">Home</a></li>
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#booking" class="nav-link">Book Now</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+
+    </div>
+  </nav>
+
+  <!-- ===================== HERO SECTION =====================
+    This is the first thing people see - the big full-screen intro.
+    It should immediately tell them who this is and what to do.
+    The "id" attributes on each section are what the nav links scroll to.
+  -->
+  <section class="hero" id="home">
+
+    <!-- Decorative background elements (animated purple orbs) - purely visual -->
+    <div class="hero-bg-orb orb-1"></div>
+    <div class="hero-bg-orb orb-2"></div>
+
+    <div class="hero-content">
+      <!-- Logo image - only shows when logo.png is in the images folder -->
+      <img src="images/logo.png" alt="Royal Detailing" class="hero-logo" onerror="this.style.display='none'" />
+
+      <!-- Eyebrow text - small text above the main heading -->
+      <p class="hero-eyebrow">Premium Auto Detailing</p>
+
+      <!-- Main heading - the business name -->
+      <h1 class="hero-title">
+        <span class="title-royal">Royal</span>
+        <span class="title-detailing">Detailing</span>
+      </h1>
+
+      <!-- Subheading - the tagline -->
+      <p class="hero-tagline">Your car deserves the royal treatment.</p>
+      <p class="hero-sub">Professional detailing services tailored to your vehicle's needs.<br>Serving Franklin Park, Bensenville &amp; surrounding areas.</p>
+
+      <!-- Call-to-action buttons -->
+      <div class="hero-buttons">
+        <a href="#booking" class="btn btn-primary">Book Appointment</a>
+        <a href="#services" class="btn btn-secondary">View Packages</a>
+      </div>
+    </div>
+
+    <!-- Arrow at the bottom nudging the user to scroll down -->
+    <div class="scroll-hint">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+
+  </section>
+
+  <!-- ===================== SERVICES SECTION =====================
+    This is where we show the detailing packages.
+    We have 3 service type tabs (Exterior, Interior, Full Detail)
+    and 3 tier cards (Basic, Standard, Premium) for each.
+  -->
+  <section class="services" id="services">
+    <div class="container">
+
+      <!-- Section header -->
+      <div class="section-header">
+        <p class="section-eyebrow">What We Offer</p>
+        <h2 class="section-title">Detailing Packages</h2>
+        <p class="section-sub">Choose the service type and tier that fits your needs. All packages include professional-grade products and meticulous attention to detail.</p>
+      </div>
+
+      <!-- Tab buttons to switch between service types -->
+      <div class="service-tabs">
+        <button class="tab-btn active" data-tab="full">Full Detail</button>
+        <button class="tab-btn" data-tab="exterior">Exterior Only</button>
+        <button class="tab-btn" data-tab="interior">Interior Only</button>
+      </div>
+
+      <!-- ---- FULL DETAIL PACKAGES ---- -->
+      <div class="packages-grid active" id="tab-full">
+
+        <!-- Basic Package Card -->
+        <div class="package-card">
+          <div class="package-header">
+            <h3 class="package-name">Basic</h3>
+            <div class="package-price">
+              <span class="price-amount">$65</span>
+              <span class="price-note">starting price</span>
+            </div>
+          </div>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Hand wash &amp; dry (exterior)</li>
+            <li><i class="fas fa-check"></i> Window cleaning (in &amp; out)</li>
+            <li><i class="fas fa-check"></i> Interior vacuum</li>
+            <li><i class="fas fa-check"></i> Dashboard &amp; surface wipe down</li>
+            <li><i class="fas fa-check"></i> Tire &amp; rim cleaning</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Wax / paint sealant</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Carpet shampoo</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Leather conditioning</li>
+          </ul>
+          <a href="#booking" class="btn btn-card">Book Basic</a>
+        </div>
+
+        <!-- Standard Package Card - marked as popular -->
+        <div class="package-card featured">
+          <div class="popular-badge">Most Popular</div>
+          <div class="package-header">
+            <h3 class="package-name">Standard</h3>
+            <div class="package-price">
+              <span class="price-amount">$110</span>
+              <span class="price-note">starting price</span>
+            </div>
+          </div>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Everything in Basic</li>
+            <li><i class="fas fa-check"></i> Carpet &amp; upholstery shampoo</li>
+            <li><i class="fas fa-check"></i> Tire shine &amp; trim dressing</li>
+            <li><i class="fas fa-check"></i> Door jamb cleaning</li>
+            <li><i class="fas fa-check"></i> Air freshener</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Wax / paint sealant</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Clay bar treatment</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Leather conditioning</li>
+          </ul>
+          <a href="#booking" class="btn btn-card">Book Standard</a>
+        </div>
+
+        <!-- Premium Package Card -->
+        <div class="package-card">
+          <div class="package-header">
+            <h3 class="package-name">Premium</h3>
+            <div class="package-price">
+              <span class="price-amount">$160</span>
+              <span class="price-note">starting price</span>
+            </div>
+          </div>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Everything in Standard</li>
+            <li><i class="fas fa-check"></i> Clay bar &amp; paint decontamination</li>
+            <li><i class="fas fa-check"></i> Wax &amp; paint sealant</li>
+            <li><i class="fas fa-check"></i> Leather cleaning &amp; conditioning</li>
+            <li><i class="fas fa-check"></i> Engine bay cleaning</li>
+            <li><i class="fas fa-check"></i> Odor elimination treatment</li>
+            <li><i class="fas fa-check"></i> Pet hair removal</li>
+            <li><i class="fas fa-check"></i> Full detailing report</li>
+          </ul>
+          <a href="#booking" class="btn btn-card">Book Premium</a>
+        </div>
+
+      </div>
+
+      <!-- ---- EXTERIOR ONLY PACKAGES ---- -->
+      <div class="packages-grid" id="tab-exterior">
+
+        <div class="package-card">
+          <div class="package-header">
+            <h3 class="package-name">Basic</h3>
+            <div class="package-price">
+              <span class="price-amount">$35</span>
+              <span class="price-note">starting price</span>
+            </div>
+          </div>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Hand wash &amp; dry</li>
+            <li><i class="fas fa-check"></i> Exterior window cleaning</li>
+            <li><i class="fas fa-check"></i> Tire &amp; rim cleaning</li>
+            <li><i class="fas fa-check"></i> Wheel well rinse</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Tire shine</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Wax / sealant</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Trim dressing</li>
+          </ul>
+          <a href="#booking" class="btn btn-card">Book Basic</a>
+        </div>
+
+        <div class="package-card featured">
+          <div class="popular-badge">Most Popular</div>
+          <div class="package-header">
+            <h3 class="package-name">Standard</h3>
+            <div class="package-price">
+              <span class="price-amount">$55</span>
+              <span class="price-note">starting price</span>
+            </div>
+          </div>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Everything in Basic</li>
+            <li><i class="fas fa-check"></i> Tire shine</li>
+            <li><i class="fas fa-check"></i> Trim dressing</li>
+            <li><i class="fas fa-check"></i> Door jamb wipe down</li>
+            <li><i class="fas fa-check"></i> Bug &amp; tar removal</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Clay bar</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Wax / sealant</li>
+          </ul>
+          <a href="#booking" class="btn btn-card">Book Standard</a>
+        </div>
+
+        <div class="package-card">
+          <div class="package-header">
+            <h3 class="package-name">Premium</h3>
+            <div class="package-price">
+              <span class="price-amount">$85</span>
+              <span class="price-note">starting price</span>
+            </div>
+          </div>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Everything in Standard</li>
+            <li><i class="fas fa-check"></i> Clay bar treatment</li>
+            <li><i class="fas fa-check"></i> Wax &amp; paint sealant</li>
+            <li><i class="fas fa-check"></i> Paint decontamination</li>
+            <li><i class="fas fa-check"></i> Chrome &amp; metal polish</li>
+            <li><i class="fas fa-check"></i> Plastic trim restoration</li>
+            <li><i class="fas fa-check"></i> Engine bay rinse</li>
+          </ul>
+          <a href="#booking" class="btn btn-card">Book Premium</a>
+        </div>
+
+      </div>
+
+      <!-- ---- INTERIOR ONLY PACKAGES ---- -->
+      <div class="packages-grid" id="tab-interior">
+
+        <div class="package-card">
+          <div class="package-header">
+            <h3 class="package-name">Basic</h3>
+            <div class="package-price">
+              <span class="price-amount">$40</span>
+              <span class="price-note">starting price</span>
+            </div>
+          </div>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Full vacuum (seats, carpet, trunk)</li>
+            <li><i class="fas fa-check"></i> Dashboard &amp; console wipe down</li>
+            <li><i class="fas fa-check"></i> Interior window cleaning</li>
+            <li><i class="fas fa-check"></i> Cup holder cleaning</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Carpet shampoo</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Leather conditioning</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Odor treatment</li>
+          </ul>
+          <a href="#booking" class="btn btn-card">Book Basic</a>
+        </div>
+
+        <div class="package-card featured">
+          <div class="popular-badge">Most Popular</div>
+          <div class="package-header">
+            <h3 class="package-name">Standard</h3>
+            <div class="package-price">
+              <span class="price-amount">$65</span>
+              <span class="price-note">starting price</span>
+            </div>
+          </div>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Everything in Basic</li>
+            <li><i class="fas fa-check"></i> Carpet &amp; mat shampoo</li>
+            <li><i class="fas fa-check"></i> Seat cleaning</li>
+            <li><i class="fas fa-check"></i> Vent cleaning</li>
+            <li><i class="fas fa-check"></i> Air freshener</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Leather conditioning</li>
+            <li class="feature-excluded"><i class="fas fa-times"></i> Odor elimination</li>
+          </ul>
+          <a href="#booking" class="btn btn-card">Book Standard</a>
+        </div>
+
+        <div class="package-card">
+          <div class="package-header">
+            <h3 class="package-name">Premium</h3>
+            <div class="package-price">
+              <span class="price-amount">$95</span>
+              <span class="price-note">starting price</span>
+            </div>
+          </div>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Everything in Standard</li>
+            <li><i class="fas fa-check"></i> Leather cleaning &amp; conditioning</li>
+            <li><i class="fas fa-check"></i> Steam cleaning</li>
+            <li><i class="fas fa-check"></i> Odor elimination treatment</li>
+            <li><i class="fas fa-check"></i> Pet hair removal</li>
+            <li><i class="fas fa-check"></i> Headliner cleaning</li>
+            <li><i class="fas fa-check"></i> Stain treatment</li>
+          </ul>
+          <a href="#booking" class="btn btn-card">Book Premium</a>
+        </div>
+
+      </div>
+
+      <!-- Add-ons & note about quotes -->
+      <div class="services-note">
+        <div class="addons-box">
+          <h4><i class="fas fa-plus-circle"></i> Available Add-ons</h4>
+          <div class="addons-grid">
+            <span class="addon-tag">Wax / Paint Sealant +$20</span>
+            <span class="addon-tag">Engine Bay Cleaning +$25</span>
+            <span class="addon-tag">Odor Elimination +$20</span>
+            <span class="addon-tag">Pet Hair Removal +$15</span>
+            <span class="addon-tag">Headlight Restoration +$30</span>
+            <span class="addon-tag">Ceramic Coating — Quote Required</span>
+          </div>
+        </div>
+        <div class="quote-note">
+          <i class="fas fa-info-circle"></i>
+          <p>Prices shown are <strong>starting prices</strong>. Final cost may vary based on vehicle size and condition. Heavily soiled vehicles may require a custom quote — contact us or mention it in your booking.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== BOOKING SECTION =====================
+    This is the appointment form.
+    When someone submits it, JavaScript will handle displaying a confirmation.
+    Later on, this can be connected to a real backend or email service.
+  -->
+  <section class="booking" id="booking">
+    <div class="container">
+
+      <div class="section-header">
+        <p class="section-eyebrow">Get Scheduled</p>
+        <h2 class="section-title">Book an Appointment</h2>
+        <p class="section-sub">Fill out the form below and we'll reach out to confirm your appointment and finalize pricing.</p>
+      </div>
+
+      <div class="booking-wrapper">
+
+        <!-- Left side - info cards -->
+        <div class="booking-info">
+          <div class="info-card">
+            <i class="fas fa-clock"></i>
+            <div>
+              <h4>Quick Response</h4>
+              <p>We'll confirm your booking within 24 hours</p>
+            </div>
+          </div>
+          <div class="info-card">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <h4>Mobile Service</h4>
+              <p>We come to you — at home or work</p>
+            </div>
+          </div>
+          <div class="info-card">
+            <i class="fas fa-shield-alt"></i>
+            <div>
+              <h4>Satisfaction Guaranteed</h4>
+              <p>We don't leave until you're happy with the result</p>
+            </div>
+          </div>
+          <div class="info-card">
+            <i class="fas fa-tag"></i>
+            <div>
+              <h4>Fair Pricing</h4>
+              <p>No hidden fees — transparent quotes every time</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right side - the actual form -->
+        <form class="booking-form" id="booking-form">
+
+          <div class="form-row">
+            <!-- Each form field has a label (describes the field) and an input (where they type) -->
+            <div class="form-group">
+              <label for="name">Full Name *</label>
+              <input type="text" id="name" name="name" placeholder="John Smith" required />
+            </div>
+            <div class="form-group">
+              <label for="contact">Phone or Email *</label>
+              <input type="text" id="contact" name="contact" placeholder="(555) 000-0000 or email@example.com" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="date">Preferred Date</label>
+              <!-- type="date" gives a date picker automatically -->
+              <input type="date" id="date" name="date" />
+            </div>
+            <div class="form-group">
+              <label for="time">Preferred Time</label>
+              <!-- A dropdown (select) for time of day -->
+              <select id="time" name="time">
+                <option value="">Select a time</option>
+                <option value="morning">Morning (8am - 12pm)</option>
+                <option value="afternoon">Afternoon (12pm - 4pm)</option>
+                <option value="evening">Evening (4pm - 7pm)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="service-type">Service Type *</label>
+              <select id="service-type" name="service-type" required>
+                <option value="">Select service type</option>
+                <option value="full-basic">Full Detail — Basic ($65+)</option>
+                <option value="full-standard">Full Detail — Standard ($110+)</option>
+                <option value="full-premium">Full Detail — Premium ($160+)</option>
+                <option value="exterior-basic">Exterior Only — Basic ($35+)</option>
+                <option value="exterior-standard">Exterior Only — Standard ($55+)</option>
+                <option value="exterior-premium">Exterior Only — Premium ($85+)</option>
+                <option value="interior-basic">Interior Only — Basic ($40+)</option>
+                <option value="interior-standard">Interior Only — Standard ($65+)</option>
+                <option value="interior-premium">Interior Only — Premium ($95+)</option>
+                <option value="ceramic">Ceramic Coating — Custom Quote</option>
+                <option value="quote">Not sure — I need a custom quote</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="vehicle">Vehicle (Year, Make, Model)</label>
+              <input type="text" id="vehicle" name="vehicle" placeholder="e.g. 2019 Honda Civic" />
+            </div>
+          </div>
+
+          <!-- Add-ons checkboxes -->
+          <div class="form-group full-width">
+            <label>Add-ons (optional)</label>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" name="addons" value="wax"> Wax / Paint Sealant (+$20)</label>
+              <label class="checkbox-label"><input type="checkbox" name="addons" value="engine"> Engine Bay (+$25)</label>
+              <label class="checkbox-label"><input type="checkbox" name="addons" value="odor"> Odor Elimination (+$20)</label>
+              <label class="checkbox-label"><input type="checkbox" name="addons" value="pet-hair"> Pet Hair Removal (+$15)</label>
+              <label class="checkbox-label"><input type="checkbox" name="addons" value="headlights"> Headlight Restoration (+$30)</label>
+            </div>
+          </div>
+
+          <!-- Condition dropdown -->
+          <div class="form-group full-width">
+            <label for="condition">Vehicle Condition</label>
+            <select id="condition" name="condition">
+              <option value="">How would you describe your vehicle's current condition?</option>
+              <option value="light">Light — just needs a routine refresh</option>
+              <option value="moderate">Moderate — some dirt, minor stains</option>
+              <option value="heavy">Heavy — very dirty, major stains or odors</option>
+              <option value="unsure">Not sure — I'd like a quote</option>
+            </select>
+          </div>
+
+          <!-- Notes textarea -->
+          <div class="form-group full-width">
+            <label for="notes">Additional Notes</label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Any specific requests, questions, or details about your vehicle..."></textarea>
+          </div>
+
+          <!-- Submit button -->
+          <button type="submit" class="btn btn-primary btn-submit">
+            <i class="fas fa-calendar-check"></i> Request Appointment
+          </button>
+
+          <!-- Success message - hidden by default, shown by JavaScript after submit -->
+          <div class="form-success" id="form-success">
+            <i class="fas fa-check-circle"></i>
+            <h4>Request Received!</h4>
+            <p>Thanks! We'll reach out within 24 hours to confirm your appointment.</p>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT SECTION ===================== -->
+  <section class="contact" id="contact">
+    <div class="container">
+
+      <div class="section-header">
+        <p class="section-eyebrow">Get In Touch</p>
+        <h2 class="section-title">Contact Us</h2>
+        <p class="section-sub">Have a question? Reach out and we'll get back to you as soon as possible.</p>
+      </div>
+
+      <div class="contact-grid">
+
+        <!-- Phone -->
+        <a href="tel:+18724001491" class="contact-card">
+          <div class="contact-icon"><i class="fas fa-phone"></i></div>
+          <h4>Call or Text</h4>
+          <p>(872) 400-1491</p>
+          <p style="font-size:0.8rem;margin-top:4px;">(224) 391-4351</p>
+        </a>
+
+        <!-- Location -->
+        <a href="https://maps.google.com/?q=Franklin+Park+IL" target="_blank" class="contact-card">
+          <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <h4>Location</h4>
+          <p>Franklin Park / Bensenville</p>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://instagram.com/royal_detailing3" target="_blank" class="contact-card">
+          <div class="contact-icon"><i class="fab fa-instagram"></i></div>
+          <h4>Instagram</h4>
+          <p>@royal_detailing3</p>
+        </a>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="logo-royal">Royal</span>
+          <span class="logo-detailing">Detailing</span>
+          <p>Your car deserves the royal treatment.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#home">Home</a>
+          <a href="#services">Services</a>
+          <a href="#booking">Book Now</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Royal Detailing. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Link to our JavaScript file - placed at the BOTTOM of body so the HTML loads first -->
+  <script src="js/script.js"></script>
+
+</body>
+</html>

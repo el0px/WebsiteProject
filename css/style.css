@@ -1,0 +1,1210 @@
+/* ============================================================
+   ROYAL DETAILING — STYLESHEET
+
+   CSS works top to bottom. Styles defined later can override
+   styles defined earlier if they target the same element.
+
+   We organize it in the same order as the HTML:
+   1. Variables & Reset
+   2. Base / Typography
+   3. Reusable Components (buttons, containers)
+   4. Navbar
+   5. Hero
+   6. Services
+   7. Booking
+   8. Contact
+   9. Footer
+   10. Animations
+   11. Mobile (Responsive)
+============================================================ */
+
+
+/* ============================================================
+   1. CSS VARIABLES & RESET
+
+   Variables (--variable-name) let us define colors and values
+   once and reuse them everywhere. If the client wants to change
+   the purple, we change ONE line instead of 50.
+
+   The * selector targets EVERY element on the page.
+   "box-sizing: border-box" makes sizing more predictable —
+   padding and borders are included in the element's width.
+   The browser adds default margins/padding to everything, so
+   we reset them to 0 to start clean.
+============================================================ */
+
+:root {
+  /* Color palette */
+  --black:        #ffffff;
+  --black-card:   #f5f5f5;
+  --black-input:  #eeeeee;
+  --black-border: #dddddd;
+
+  --silver:       #333333;
+  --silver-light: #111111;
+  --silver-dim:   #666666;
+
+  --purple:       #7c3aed;
+  --purple-light: #6d28d9;
+  --purple-dark:  #5b21b6;
+  --purple-glow:  rgba(124, 58, 237, 0.2);
+  --purple-glow2: rgba(124, 58, 237, 0.08);
+
+  /* Typography */
+  --font-heading: 'Cinzel', serif;
+  --font-body:    'Inter', sans-serif;
+
+  /* Spacing */
+  --section-padding: 100px 0;
+
+  /* Transitions */
+  --transition: 0.3s ease;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* scroll-behavior: smooth makes anchor links (#section) animate
+     instead of jumping instantly */
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--black);
+  color: var(--silver);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden; /* prevents horizontal scroll on mobile */
+}
+
+
+/* ============================================================
+   2. BASE TYPOGRAPHY
+============================================================ */
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  color: var(--silver-light);
+  line-height: 1.2;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+
+/* ============================================================
+   3. REUSABLE COMPONENTS
+
+   A "container" is a centered wrapper with a max width.
+   Almost every section wraps its content in one so the
+   content doesn't stretch across a huge monitor.
+============================================================ */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;       /* auto left/right centers it horizontally */
+  padding: 0 24px;
+}
+
+/* Section header — used across multiple sections */
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--purple-light);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  /* clamp(min, preferred, max) scales with screen size */
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--silver-light), var(--purple-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-sub {
+  font-size: 1.05rem;
+  color: var(--silver-dim);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* BUTTONS
+   We have two main button styles:
+   btn-primary = purple filled
+   btn-secondary = outlined/ghost */
+.btn {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition);
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--purple);
+  color: #fff;
+  box-shadow: 0 4px 20px var(--purple-glow);
+}
+
+.btn-primary:hover {
+  background: var(--purple-light);
+  transform: translateY(-2px);       /* lifts up slightly on hover */
+  box-shadow: 0 8px 30px var(--purple-glow);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--silver-light);
+  border: 1.5px solid var(--black-border);
+}
+
+.btn-secondary:hover {
+  border-color: var(--purple);
+  color: var(--purple-light);
+  transform: translateY(-2px);
+}
+
+.btn-card {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--purple-light);
+  border: 1.5px solid var(--purple-dark);
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+  margin-top: auto;
+}
+
+.btn-card:hover {
+  background: var(--purple);
+  color: #fff;
+  border-color: var(--purple);
+  transform: translateY(-1px);
+}
+
+
+/* ============================================================
+   4. NAVBAR
+
+   "position: fixed" keeps it at the top even while scrolling.
+   "z-index: 1000" makes sure it sits on top of all other content.
+   We start it transparent and JavaScript adds the class
+   "scrolled" once the user scrolls, which adds a background.
+============================================================ */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 20px 0;
+  transition: all var(--transition);
+}
+
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);      /* blurs content behind the navbar */
+  padding: 14px 0;
+  border-bottom: 1px solid var(--black-border);
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;                    /* flexbox aligns items in a row */
+  align-items: center;
+  justify-content: space-between;   /* logo on left, links on right */
+}
+
+.nav-logo {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.logo-royal {
+  color: var(--silver-light);
+  font-weight: 700;
+}
+
+.logo-detailing {
+  color: var(--purple-light);
+  font-weight: 400;
+  font-size: 0.95em;
+}
+
+.nav-logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 4px;
+}
+
+.hero-logo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 24px;
+  border: 2px solid var(--purple-light);
+  box-shadow: 0 0 30px var(--purple-glow);
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--silver-dim);
+  transition: color var(--transition);
+  position: relative;
+}
+
+/* Underline that slides in on hover */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--purple-light);
+  transition: width var(--transition);
+}
+
+.nav-link:hover {
+  color: var(--silver-light);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Hamburger button - hidden on desktop, visible on mobile */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--silver);
+  border-radius: 2px;
+  transition: all var(--transition);
+}
+
+/* When hamburger is "open" (class added by JS), animate into an X */
+.hamburger.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+
+/* ============================================================
+   5. HERO SECTION
+
+   "min-height: 100vh" means at least the full viewport height.
+   "vh" = viewport height units (100vh = 100% of screen height).
+   The background uses a radial gradient for the subtle glow effect.
+============================================================ */
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  position: relative;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124, 58, 237, 0.06) 0%, transparent 70%),
+    var(--black);
+  overflow: hidden;
+}
+
+/* Decorative glowing orbs in the background */
+.hero-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;   /* makes sure you can't accidentally click them */
+  animation: orbFloat 8s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 500px;
+  height: 500px;
+  background: rgba(124, 58, 237, 0.07);
+  top: -100px;
+  left: -150px;
+}
+
+.orb-2 {
+  width: 400px;
+  height: 400px;
+  background: rgba(159, 96, 245, 0.05);
+  bottom: -80px;
+  right: -100px;
+  animation-delay: -4s;
+}
+
+.hero-content {
+  position: relative;   /* sits above the orbs */
+  z-index: 1;
+  max-width: 800px;
+}
+
+.hero-eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--purple-light);
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.title-royal {
+  color: var(--silver-light);
+  text-shadow: 0 0 60px rgba(200, 200, 212, 0.15);
+}
+
+.title-detailing {
+  color: var(--purple-light);
+  text-shadow: 0 0 60px var(--purple-glow);
+}
+
+.hero-tagline {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  color: var(--silver);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  margin-bottom: 16px;
+}
+
+.hero-sub {
+  font-size: 1rem;
+  color: var(--silver-dim);
+  max-width: 520px;
+  margin: 0 auto 40px;
+  line-height: 1.8;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;    /* stacks on small screens */
+}
+
+/* Bouncing arrow at bottom of hero */
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--silver-dim);
+  font-size: 1.1rem;
+  animation: bounce 2s ease-in-out infinite;
+  opacity: 0.5;
+}
+
+
+/* ============================================================
+   6. SERVICES SECTION
+============================================================ */
+
+.services {
+  padding: var(--section-padding);
+  background: var(--black);
+}
+
+/* Tab buttons to switch between Exterior/Interior/Full */
+.service-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 10px 28px;
+  background: var(--black-card);
+  color: var(--silver-dim);
+  border: 1.5px solid var(--black-border);
+  border-radius: 40px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.tab-btn:hover {
+  border-color: var(--purple-dark);
+  color: var(--silver-light);
+}
+
+/* When a tab is active (selected), highlight it purple */
+.tab-btn.active {
+  background: var(--purple);
+  color: #fff;
+  border-color: var(--purple);
+  box-shadow: 0 4px 16px var(--purple-glow);
+}
+
+/* The package grids are hidden by default.
+   JavaScript adds the "active" class to show the right one. */
+.packages-grid {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);   /* 3 equal columns */
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.packages-grid.active {
+  display: grid;
+}
+
+/* Individual package card */
+.package-card {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 16px;
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all var(--transition);
+}
+
+.package-card:hover {
+  border-color: var(--purple-dark);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+/* The "featured" card (Standard/Most Popular) has a purple border and glow */
+.package-card.featured {
+  border-color: var(--purple);
+  background: linear-gradient(160deg, var(--black-card), rgba(124,58,237,0.06));
+  box-shadow: 0 0 30px var(--purple-glow2), 0 0 0 1px var(--purple);
+}
+
+.package-card.featured:hover {
+  box-shadow: 0 12px 40px var(--purple-glow), 0 0 0 1px var(--purple-light);
+}
+
+.popular-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--purple);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 16px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.package-header {
+  margin-bottom: 28px;
+}
+
+.package-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--silver-light);
+  margin-bottom: 10px;
+}
+
+.package-price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.price-amount {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--silver-light);
+  font-family: var(--font-heading);
+}
+
+.price-note {
+  font-size: 0.8rem;
+  color: var(--silver-dim);
+}
+
+/* Feature list items inside each card */
+.package-features {
+  flex: 1;                  /* takes up remaining space so buttons align at bottom */
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.package-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--silver);
+}
+
+.package-features li i {
+  width: 16px;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.package-features li i.fa-check {
+  color: var(--purple-light);
+}
+
+/* Greyed out / crossed off features */
+.feature-excluded {
+  color: var(--silver-dim) !important;
+  opacity: 0.45;
+}
+
+.feature-excluded i.fa-times {
+  color: var(--silver-dim) !important;
+}
+
+/* Add-ons and disclaimer below the package cards */
+.services-note {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.addons-box {
+  flex: 1;
+  min-width: 280px;
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.addons-box h4 {
+  font-size: 1rem;
+  color: var(--purple-light);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addons-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.addon-tag {
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid var(--purple-dark);
+  color: var(--silver);
+  font-size: 0.82rem;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.quote-note {
+  flex: 1;
+  min-width: 280px;
+  background: rgba(124, 58, 237, 0.05);
+  border: 1px solid var(--purple-dark);
+  border-radius: 12px;
+  padding: 28px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.quote-note i {
+  color: var(--purple-light);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.quote-note p {
+  font-size: 0.9rem;
+  color: var(--silver-dim);
+  line-height: 1.7;
+}
+
+.quote-note strong {
+  color: var(--silver);
+}
+
+
+/* ============================================================
+   7. BOOKING SECTION
+============================================================ */
+
+.booking {
+  padding: var(--section-padding);
+  background: linear-gradient(180deg, var(--black) 0%, #f0f0f5 100%);
+}
+
+.booking-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 2fr;   /* info takes 1/3, form takes 2/3 */
+  gap: 48px;
+  align-items: start;
+}
+
+/* Info cards on the left */
+.booking-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-card {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: border-color var(--transition);
+}
+
+.info-card:hover {
+  border-color: var(--purple-dark);
+}
+
+.info-card > i {
+  color: var(--purple-light);
+  font-size: 1.2rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+.info-card h4 {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--silver-light);
+  margin-bottom: 4px;
+}
+
+.info-card p {
+  font-size: 0.82rem;
+  color: var(--silver-dim);
+}
+
+/* The booking form */
+.booking-form {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 16px;
+  padding: 40px;
+}
+
+/* Two-column layout for form rows */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;   /* spans both columns */
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--silver-dim);
+}
+
+/* Styling all input types consistently */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: var(--black-input);
+  border: 1.5px solid var(--black-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--silver-light);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  outline: none;
+  transition: border-color var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Purple border glow when a field is focused (clicked into) */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 0 3px var(--purple-glow2);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--silver-dim);
+  opacity: 0.5;
+}
+
+.form-group textarea {
+  resize: vertical;   /* lets user resize vertically only */
+  min-height: 90px;
+}
+
+/* Checkboxes for add-ons */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 16px;
+  background: var(--black-input);
+  border: 1.5px solid var(--black-border);
+  border-radius: 8px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--silver);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.checkbox-label:hover {
+  color: var(--silver-light);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--purple);   /* colors the checkbox when checked */
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.btn-submit {
+  width: 100%;
+  margin-top: 8px;
+  padding: 16px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Success message - hidden until form is submitted */
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 32px;
+  margin-top: 24px;
+  background: rgba(124, 58, 237, 0.08);
+  border: 1px solid var(--purple-dark);
+  border-radius: 12px;
+}
+
+.form-success.visible {
+  display: block;
+  animation: fadeInUp 0.4s ease;
+}
+
+.form-success i {
+  font-size: 2.5rem;
+  color: var(--purple-light);
+  margin-bottom: 12px;
+}
+
+.form-success h4 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: var(--silver-light);
+}
+
+.form-success p {
+  font-size: 0.9rem;
+  color: var(--silver-dim);
+}
+
+
+/* ============================================================
+   8. CONTACT SECTION
+============================================================ */
+
+.contact {
+  padding: var(--section-padding);
+  background: var(--black);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.contact-card {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: 16px;
+  padding: 36px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.contact-card:hover {
+  border-color: var(--purple);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px var(--purple-glow);
+}
+
+.contact-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(124, 58, 237, 0.12);
+  border: 1px solid var(--purple-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--purple-light);
+  margin-bottom: 4px;
+}
+
+.contact-card h4 {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--silver-light);
+}
+
+.contact-card p {
+  font-size: 0.88rem;
+  color: var(--silver-dim);
+}
+
+
+/* ============================================================
+   9. FOOTER
+============================================================ */
+
+.footer {
+  background: #f0f0f0;
+  border-top: 1px solid var(--black-border);
+  padding: 48px 0 28px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-brand > span {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+}
+
+.footer-brand > span + span {
+  /* targets the second span (Detailing) */
+}
+
+.footer-brand p {
+  font-size: 0.82rem;
+  color: var(--silver-dim);
+  margin-top: 6px;
+  font-style: italic;
+}
+
+.footer-links {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  font-size: 0.85rem;
+  color: var(--silver-dim);
+  transition: color var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.footer-links a:hover {
+  color: var(--purple-light);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--black-border);
+  padding-top: 24px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--silver-dim);
+  opacity: 0.6;
+}
+
+
+/* ============================================================
+   10. ANIMATIONS
+
+   @keyframes defines the start and end states of an animation.
+   Elements use the animation property to reference them.
+============================================================ */
+
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50%       { transform: translateY(-30px) scale(1.05); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%       { transform: translateX(-50%) translateY(8px); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Page fade-in on load */
+body {
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+/* ============================================================
+   11. RESPONSIVE / MOBILE STYLES
+
+   @media queries apply styles ONLY when the screen width
+   matches the condition. This is how we make the site look
+   good on phones and tablets, not just desktop.
+
+   "max-width: 768px" means: apply these styles when the screen
+   is 768px wide or smaller (typical tablet/phone breakpoint).
+============================================================ */
+
+@media (max-width: 768px) {
+
+  /* Show hamburger, hide desktop links */
+  .hamburger {
+    display: flex;
+  }
+
+  /* Mobile nav - full screen dropdown */
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    z-index: 999;
+  }
+
+  /* When open class is added by JS, show the menu */
+  .nav-links.open {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .nav-link {
+    font-size: 1.2rem;
+  }
+
+  /* Stack package cards vertically on mobile */
+  .packages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stack booking layout vertically */
+  .booking-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stack form rows into single column */
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-form {
+    padding: 24px;
+  }
+
+  /* Stack contact cards vertically */
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stack footer content */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+
+  .hero {
+    padding: 140px 24px 80px;
+  }
+
+  .services-note {
+    flex-direction: column;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .service-tabs {
+    flex-direction: column;
+    align-items: center;
+  }
+}
