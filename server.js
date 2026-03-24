@@ -24,22 +24,20 @@ require('dotenv').config();
 const app  = express();
 const PORT = process.env.PORT || 4000;
 
-// ── MIDDLEWARE ──────────────────────────────────────────────
-// Middleware = functions that run on every request before it hits our routes
+
+// Middleware is functions that run on every request before it hits our routes
 
 // Allow the frontend (port 3000) to send requests to this server (port 4000)
 app.use(cors());
 
-// Tell Express to parse JSON bodies — without this, req.body would be undefined
+// Tell Express to parse JSON bodies
 app.use(express.json());
 
 // Serve the static website files (HTML, CSS, JS, images)
-// so we can eventually run everything from one server
 app.use(express.static(path.join(__dirname)));
 
-// ── EMAIL TRANSPORTER ───────────────────────────────────────
 // A "transporter" is Nodemailer's term for the email account it uses to send.
-// We're using Gmail here. The credentials come from the .env file.
+// Using Gmail here. The credentials come from the .env file.
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -48,7 +46,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// ── BOOKING ROUTE ────────────────────────────────────────────
 // This is the endpoint the form submits to.
 // app.post means: when the browser sends a POST request to /book, run this function.
 app.post('/book', async (req, res) => {
@@ -75,58 +72,32 @@ app.post('/book', async (req, res) => {
   }
 
   // Format the add-ons into a readable string
+  // addons comes in as an array (or single string if only one checked)
   let addonsText = 'None';
   if (addons) {
     const addonsArray = Array.isArray(addons) ? addons : [addons];
     addonsText = addonsArray.join(', ');
   }
 
-  // Convert raw service type value to a human-readable label
-  const serviceLabels = {
-    'full-basic':        'Full Detail — Basic ($65+)',
-    'full-standard':     'Full Detail — Standard ($110+)',
-    'full-premium':      'Full Detail — Premium ($160+)',
-    'exterior-basic':    'Exterior Only — Basic ($35+)',
-    'exterior-standard': 'Exterior Only — Standard ($55+)',
-    'exterior-premium':  'Exterior Only — Premium ($85+)',
-    'interior-basic':    'Interior Only — Basic ($40+)',
-    'interior-standard': 'Interior Only — Standard ($65+)',
-    'interior-premium':  'Interior Only — Premium ($95+)',
-    'ceramic':           'Ceramic Coating — Custom Quote',
-    'quote':             'Custom Quote Needed',
+  // Logo attachment — embedded inline so it shows up in both emails
+  const logoAttachment = {
+    filename: 'logo.png',
+    path:     path.join(__dirname, 'images', 'logo.png'),
+    cid:      'royaldetailinglogo' 
   };
-  const serviceLabel = serviceLabels[serviceType] || serviceType;
-
-  // Format date from "2026-03-25" to "March 25, 2026"
-  let formattedDate = 'Not specified';
-  if (date) {
-    const d = new Date(date + 'T12:00:00'); // noon avoids timezone shift issues
-    formattedDate = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  }
-
-  // Read the logo and convert to base64 so it embeds directly in the HTML.
-  // This is more reliable than CID attachments across different email clients.
-  const fs = require('fs');
-  let logoBase64 = '';
-  try {
-    const logoBuffer = fs.readFileSync(path.join(__dirname, 'images', 'logo.png'));
-    logoBase64 = `data:image/png;base64,${logoBuffer.toString('base64')}`;
-  } catch (e) {
-    // Logo file missing — emails will still send, just without the image
-  }
 
   // ── EMAIL 1: Notification to the business ───────────────────
-  // HTML email so it looks clean and professional in the inbox
   const businessEmail = {
     from:        `"Royal Detailing Bookings" <${process.env.EMAIL_USER}>`,
     to:          process.env.EMAIL_TO,
-    subject:     `New Booking Request - ${name} | ${serviceLabel}`,
+    subject:     `📋 New Booking — ${name} | ${serviceType}`,
+    attachments: [logoAttachment],
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
 
         <!-- Header -->
         <div style="background: #5b21b6; padding: 28px 32px; display: flex; align-items: center; gap: 16px;">
-          ${logoBase64 ? `<img src="${logoBase64}" alt="Royal Detailing" style="width: 80px; height: 80px; object-fit: contain;" />` : ''}
+          <img src="cid:royaldetailinglogo" alt="Royal Detailing" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.3);" />
           <div>
             <h1 style="color: #ffffff; margin: 0; font-size: 22px; letter-spacing: 1px;">ROYAL DETAILING</h1>
             <p style="color: #d8b4fe; margin: 4px 0 0; font-size: 14px;">New Booking Request</p>
@@ -148,7 +119,7 @@ app.post('/book', async (req, res) => {
             </tr>
             <tr style="border-bottom: 1px solid #f0f0f0;">
               <td style="padding: 12px 0; color: #666; font-size: 13px;">Date Requested</td>
-              <td style="padding: 12px 0; color: #1a1a1a; font-weight: 600;">${formattedDate}</td>
+              <td style="padding: 12px 0; color: #1a1a1a; font-weight: 600;">${date || 'Not specified'}</td>
             </tr>
             <tr style="border-bottom: 1px solid #f0f0f0;">
               <td style="padding: 12px 0; color: #666; font-size: 13px;">Time</td>
@@ -157,7 +128,7 @@ app.post('/book', async (req, res) => {
             <tr style="border-bottom: 1px solid #f0f0f0;">
               <td style="padding: 12px 0; color: #666; font-size: 13px;">Service</td>
               <td style="padding: 12px 0;">
-                <span style="background: #5b21b6; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 13px;">${serviceLabel}</span>
+                <span style="background: #5b21b6; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 13px;">${serviceType}</span>
               </td>
             </tr>
             <tr style="border-bottom: 1px solid #f0f0f0;">
@@ -199,13 +170,14 @@ app.post('/book', async (req, res) => {
   const confirmationEmail = {
     from:        `"Royal Detailing" <${process.env.EMAIL_USER}>`,
     to:          contact,
-    subject:     `Booking Request Received - Royal Detailing`,
+    subject:     `Booking Request Received — Royal Detailing 👑`,
+    attachments: [logoAttachment],
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
 
         <!-- Header -->
         <div style="background: #5b21b6; padding: 28px 32px; text-align: center;">
-          ${logoBase64 ? `<img src="${logoBase64}" alt="Royal Detailing" style="width: 120px; height: 120px; object-fit: contain; margin-bottom: 10px;" />` : ''}
+          <img src="cid:royaldetailinglogo" alt="Royal Detailing" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.3); margin-bottom: 14px;" />
           <h1 style="color: #ffffff; margin: 0; font-size: 24px; letter-spacing: 1px;">Royal Detailing</h1>
           <p style="color: #d8b4fe; margin: 8px 0 0; font-size: 15px;">Your car deserves the royal treatment.</p>
         </div>
@@ -221,8 +193,8 @@ app.post('/book', async (req, res) => {
           <!-- Booking Summary Box -->
           <div style="background: #f5f3ff; border: 1px solid #ddd8f5; border-radius: 8px; padding: 20px; text-align: left; margin-bottom: 28px;">
             <h4 style="margin: 0 0 14px; color: #5b21b6; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">Your Request Summary</h4>
-            <p style="margin: 6px 0; color: #333; font-size: 14px;"><strong>Service:</strong> ${serviceLabel}</p>
-            <p style="margin: 6px 0; color: #333; font-size: 14px;"><strong>Date:</strong> ${formattedDate}</p>
+            <p style="margin: 6px 0; color: #333; font-size: 14px;"><strong>Service:</strong> ${serviceType}</p>
+            <p style="margin: 6px 0; color: #333; font-size: 14px;"><strong>Date:</strong> ${date || 'To be confirmed'}</p>
             <p style="margin: 6px 0; color: #333; font-size: 14px;"><strong>Vehicle:</strong> ${vehicle || 'Not specified'}</p>
             ${addonsText !== 'None' ? `<p style="margin: 6px 0; color: #333; font-size: 14px;"><strong>Add-ons:</strong> ${addonsText}</p>` : ''}
           </div>
@@ -268,7 +240,6 @@ app.post('/book', async (req, res) => {
 
 });
 
-// ── START THE SERVER ─────────────────────────────────────────
 // app.listen tells Node to start listening for incoming requests on the given port
 app.listen(PORT, () => {
   console.log(`Royal Detailing server running on http://localhost:${PORT}`);

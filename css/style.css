@@ -1,10 +1,6 @@
 /* ============================================================
    ROYAL DETAILING — STYLESHEET
 
-   CSS works top to bottom. Styles defined later can override
-   styles defined earlier if they target the same element.
-
-   We organize it in the same order as the HTML:
    1. Variables & Reset
    2. Base / Typography
    3. Reusable Components (buttons, containers)
