@@ -172,7 +172,7 @@ app.post('/book', async (req, res) => {
   const businessHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
       <div style="background: #5b21b6; padding: 28px 32px; text-align: center;">
-        <img src="https://royal-detailing.onrender.com/logo.png" alt="Royal Detailing" style="height: 70px; margin-bottom: 10px;" />
+        <p style="color: #ffffff; font-size: 22px; font-weight: 700; margin: 0 0 4px;">Royal Detailing</p>
         <p style="color: #d8b4fe; margin: 4px 0 0; font-size: 14px;">New Booking Request</p>
       </div>
       <div style="padding: 32px; background: #ffffff;">
@@ -230,7 +230,7 @@ app.post('/book', async (req, res) => {
   const confirmationHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
       <div style="background: #5b21b6; padding: 28px 32px; text-align: center;">
-        <img src="https://royal-detailing.onrender.com/logo.png" alt="Royal Detailing" style="height: 70px; margin-bottom: 10px;" />
+        <p style="color: #ffffff; font-size: 22px; font-weight: 700; margin: 0 0 4px;">Royal Detailing</p>
         <p style="color: #d8b4fe; margin: 8px 0 0; font-size: 15px;">Your car deserves the royal treatment.</p>
       </div>
       <div style="padding: 36px 32px; background: #ffffff; text-align: center;">
@@ -324,7 +324,7 @@ app.patch('/admin/bookings/:id', requireAdmin, async (req, res) => {
     const statusHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
         <div style="background: #5b21b6; padding: 28px 32px; text-align: center;">
-          <img src="https://royal-detailing.onrender.com/logo.png" alt="Royal Detailing" style="height: 70px;" />
+          <p style="color: #ffffff; font-size: 22px; font-weight: 700; margin: 0;">Royal Detailing</p>
         </div>
         <div style="padding: 36px 32px; background: #ffffff; text-align: center;">
           <div style="font-size: 48px; margin-bottom: 16px;">${isConfirmed ? '✅' : '❌'}</div>
