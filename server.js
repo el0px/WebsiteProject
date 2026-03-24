@@ -195,7 +195,7 @@ app.post('/book', async (req, res) => {
   try {
     // Send business notification
     await resend.emails.send({
-      from:    'Royal Detailing Bookings <onboarding@resend.dev>',
+      from:    'Royal Detailing Bookings <bookings@royal-detailing.org>',
       to:      process.env.EMAIL_TO,
       subject: `New Booking — ${name} | ${serviceLabel}`,
       html:    businessHtml,
@@ -205,7 +205,7 @@ app.post('/book', async (req, res) => {
     // Send customer confirmation only if they gave an email address
     if (isEmail) {
       await resend.emails.send({
-        from:    'Royal Detailing <onboarding@resend.dev>',
+        from:    'Royal Detailing <bookings@royal-detailing.org>',
         to:      contact,
         subject: 'Booking Request Received — Royal Detailing',
         html:    confirmationHtml,
