@@ -126,11 +126,6 @@ tabBtns.forEach(btn => {
    - Check that required fields are filled
    - Show the success message
    - Reset the form
-
-   In a real production site, you'd also send the form data
-   to a backend server or a service like Formspree/EmailJS
-   to actually email the booking to your cousin.
-   We'll add that step later!
 ============================================================ */
 
 const bookingForm  = document.getElementById('booking-form');
