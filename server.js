@@ -300,7 +300,7 @@ app.get('/admin/bookings', requireAdmin, async (req, res) => {
   res.json({ success: true, bookings: data });
 });
 
-// ── ADMIN: Confirm or reject a booking ─────────────────────────
+// ── ADMIN: Confirm or reject a booking ────────────────────────
 app.patch('/admin/bookings/:id', requireAdmin, async (req, res) => {
   const { id } = req.params;
   const { status } = req.body; // 'confirmed' or 'rejected'
