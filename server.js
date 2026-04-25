@@ -50,7 +50,7 @@ const supabase = createClient(
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'client', 'dist')));
 
 // Simple admin auth middleware
 function requireAdmin(req, res, next) {
@@ -397,6 +397,11 @@ app.delete('/admin/blocked-dates/:date', requireAdmin, async (req, res) => {
 
   if (error) return res.status(500).json({ success: false });
   res.json({ success: true });
+});
+
+// SPA fallback — serve index.html for any non-API route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {
