@@ -1,135 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<!--
-  HEAD SECTION
-  This is metadata - info about the page that the browser needs but the user doesn't see.
-  Things like: what character set to use, how to scale on mobile, the tab title, and linking
-  our CSS file so the page knows where to find its styles.
--->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Royal Detailing</title>
   <link rel="stylesheet" href="css/style.css" />
-  <!-- Google Fonts - we're loading two fonts from the internet:
-       Cinzel for the royal headings, Inter for clean readable body text -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <!-- Font Awesome - a library of icons (phone, email, instagram, etc.) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
-
-<!--
-  BODY SECTION
-  Everything the user actually sees goes inside <body>.
-  We're using a class "loaded" that JavaScript will add after the page loads
-  to trigger a smooth fade-in animation.
--->
 <body>
 
-  <!-- ===================== NAVIGATION BAR =====================
-    The nav stays fixed at the top as you scroll.
-    It contains:
-    - The logo/brand name on the left
-    - Navigation links on the right
-    - A hamburger menu icon (3 lines) that appears on mobile screens
-  -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
-
-      <!-- Logo area - clicking this scrolls back to the top -->
       <a href="#home" class="nav-logo">
         <img src="images/logo.png" alt="Royal Detailing Logo" class="nav-logo-img" onerror="this.style.display='none'" />
         <span class="logo-royal">Royal</span>
         <span class="logo-detailing">Detailing</span>
       </a>
-
-      <!-- Hamburger icon - only visible on mobile. The 3 <span> tags are the 3 lines -->
       <button class="hamburger" id="hamburger" aria-label="Open menu">
         <span></span>
         <span></span>
         <span></span>
       </button>
-
-      <!-- Nav links - the href="#section-id" values scroll to that section on click -->
       <ul class="nav-links" id="nav-links">
         <li><a href="#home" class="nav-link">Home</a></li>
         <li><a href="#services" class="nav-link">Services</a></li>
         <li><a href="#booking" class="nav-link">Book Now</a></li>
         <li><a href="#contact" class="nav-link">Contact</a></li>
       </ul>
-
     </div>
   </nav>
 
-  <!-- ===================== HERO SECTION =====================
-    This is the first thing people see - the big full-screen intro.
-    It should immediately tell them who this is and what to do.
-    The "id" attributes on each section are what the nav links scroll to.
-  -->
   <section class="hero" id="home">
-
-    <!-- Decorative background elements (animated purple orbs) - purely visual -->
     <div class="hero-bg-orb orb-1"></div>
     <div class="hero-bg-orb orb-2"></div>
-
     <div class="hero-content">
-      <!-- Logo image - only shows when logo.png is in the images folder -->
       <img src="images/logo.png" alt="Royal Detailing" class="hero-logo" onerror="this.style.display='none'" />
-
-      <!-- Eyebrow text - small text above the main heading -->
       <p class="hero-eyebrow">Premium Auto Detailing</p>
-
-      <!-- Main heading - the business name -->
       <h1 class="hero-title">
         <span class="title-royal">Royal</span>
         <span class="title-detailing">Detailing</span>
       </h1>
-
-      <!-- Subheading - the tagline -->
       <p class="hero-tagline">Your car deserves the royal treatment.</p>
       <p class="hero-sub">Professional detailing services tailored to your vehicle's needs.<br>Serving Franklin Park, Bensenville &amp; surrounding areas.</p>
-
-      <!-- Call-to-action buttons -->
       <div class="hero-buttons">
         <a href="#booking" class="btn btn-primary">Book Appointment</a>
         <a href="#services" class="btn btn-secondary">View Packages</a>
       </div>
     </div>
-
-    <!-- Arrow at the bottom nudging the user to scroll down -->
     <div class="scroll-hint">
       <i class="fas fa-chevron-down"></i>
     </div>
-
   </section>
 
-  <!-- ===================== SERVICES SECTION =====================
-    This is where we show the detailing packages.
-    We have 3 service type tabs (Exterior, Interior, Full Detail)
-    and 3 tier cards (Basic, Standard, Premium) for each.
-  -->
   <section class="services" id="services">
     <div class="container">
-
-      <!-- Section header -->
       <div class="section-header">
         <p class="section-eyebrow">What We Offer</p>
         <h2 class="section-title">Detailing Packages</h2>
         <p class="section-sub">Choose the service type and tier that fits your needs. All packages include professional-grade products and meticulous attention to detail.</p>
       </div>
 
-      <!-- Tab buttons to switch between service types -->
       <div class="service-tabs">
         <button class="tab-btn active" data-tab="full">Full Detail</button>
         <button class="tab-btn" data-tab="exterior">Exterior Only</button>
         <button class="tab-btn" data-tab="interior">Interior Only</button>
       </div>
 
-      <!-- ---- FULL DETAIL PACKAGES ---- -->
+      <!-- Full Detail -->
       <div class="packages-grid active" id="tab-full">
-
-        <!-- Basic Package Card -->
         <div class="package-card">
           <div class="package-header">
             <h3 class="package-name">Basic</h3>
@@ -151,7 +90,6 @@
           <a href="#booking" class="btn btn-card">Book Basic</a>
         </div>
 
-        <!-- Standard Package Card - marked as popular -->
         <div class="package-card featured">
           <div class="popular-badge">Most Popular</div>
           <div class="package-header">
@@ -174,7 +112,6 @@
           <a href="#booking" class="btn btn-card">Book Standard</a>
         </div>
 
-        <!-- Premium Package Card -->
         <div class="package-card">
           <div class="package-header">
             <h3 class="package-name">Premium</h3>
@@ -194,12 +131,10 @@
           </ul>
           <a href="#booking" class="btn btn-card">Book Premium</a>
         </div>
-
       </div>
 
-      <!-- ---- EXTERIOR ONLY PACKAGES ---- -->
+      <!-- Exterior Only -->
       <div class="packages-grid" id="tab-exterior">
-
         <div class="package-card">
           <div class="package-header">
             <h3 class="package-name">Basic</h3>
@@ -259,12 +194,10 @@
           </ul>
           <a href="#booking" class="btn btn-card">Book Premium</a>
         </div>
-
       </div>
 
-      <!-- ---- INTERIOR ONLY PACKAGES ---- -->
+      <!-- Interior Only -->
       <div class="packages-grid" id="tab-interior">
-
         <div class="package-card">
           <div class="package-header">
             <h3 class="package-name">Basic</h3>
@@ -325,10 +258,8 @@
           </ul>
           <a href="#booking" class="btn btn-card">Book Premium</a>
         </div>
-
       </div>
 
-      <!-- Add-ons & note about quotes -->
       <div class="services-note">
         <div class="addons-box">
           <h4><i class="fas fa-plus-circle"></i> Available Add-ons</h4>
@@ -344,18 +275,11 @@
           <p>Prices shown are <strong>starting prices</strong>. Final cost may vary based on vehicle size and condition. Heavily soiled vehicles may require a custom quote — contact us or mention it in your booking.</p>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- ===================== BOOKING SECTION =====================
-    This is the appointment form.
-    When someone submits it, JavaScript will handle displaying a confirmation.
-    Later on, this can be connected to a real backend or email service.
-  -->
   <section class="booking" id="booking">
     <div class="container">
-
       <div class="section-header">
         <p class="section-eyebrow">Get Scheduled</p>
         <h2 class="section-title">Book an Appointment</h2>
@@ -363,8 +287,6 @@
       </div>
 
       <div class="booking-wrapper">
-
-        <!-- Left side - info cards -->
         <div class="booking-info">
           <div class="info-card">
             <i class="fas fa-clock"></i>
@@ -396,11 +318,8 @@
           </div>
         </div>
 
-        <!-- Right side - the actual form -->
         <form class="booking-form" id="booking-form">
-
           <div class="form-row">
-            <!-- Each form field has a label (describes the field) and an input (where they type) -->
             <div class="form-group">
               <label for="name">Full Name *</label>
               <input type="text" id="name" name="name" placeholder="John Smith" required />
@@ -414,7 +333,6 @@
           <div class="form-row">
             <div class="form-group">
               <label for="date">Preferred Date</label>
-              <!-- type="date" gives a date picker automatically -->
               <input type="date" id="date" name="date" />
             </div>
             <div class="form-group">
@@ -449,7 +367,6 @@
             </div>
           </div>
 
-          <!-- Add-ons checkboxes -->
           <div class="form-group full-width">
             <label>Add-ons (optional)</label>
             <div class="checkbox-group">
@@ -459,7 +376,6 @@
             </div>
           </div>
 
-          <!-- Condition dropdown -->
           <div class="form-group full-width">
             <label for="condition">Vehicle Condition</label>
             <select id="condition" name="condition">
@@ -471,34 +387,27 @@
             </select>
           </div>
 
-          <!-- Notes textarea -->
           <div class="form-group full-width">
             <label for="notes">Additional Notes</label>
             <textarea id="notes" name="notes" rows="3" placeholder="Any specific requests, questions, or details about your vehicle..."></textarea>
           </div>
 
-          <!-- Submit button -->
           <button type="submit" class="btn btn-primary btn-submit">
             <i class="fas fa-calendar-check"></i> Request Appointment
           </button>
 
-          <!-- Success message - hidden by default, shown by JavaScript after submit -->
           <div class="form-success" id="form-success">
             <i class="fas fa-check-circle"></i>
             <h4>Request Received!</h4>
             <p>Thanks! We'll reach out within 24 hours to confirm your appointment.</p>
           </div>
-
         </form>
-
       </div>
     </div>
   </section>
 
-  <!-- ===================== CONTACT SECTION ===================== -->
   <section class="contact" id="contact">
     <div class="container">
-
       <div class="section-header">
         <p class="section-eyebrow">Get In Touch</p>
         <h2 class="section-title">Contact Us</h2>
@@ -506,35 +415,26 @@
       </div>
 
       <div class="contact-grid">
-
-        <!-- Phone -->
         <a href="tel:+17087142432" class="contact-card">
           <div class="contact-icon"><i class="fas fa-phone"></i></div>
           <h4>Call or Text</h4>
           <p>(708) 714-2432</p>
-          <p style="font-size:0.8rem;margin-top:4px;">(224) 391-4351</p>
+          <p style="font-size:0.8rem;margin-top:2px;color:var(--text-muted)">(224) 391-4351</p>
         </a>
-
-        <!-- Location -->
         <a href="https://maps.google.com/?q=Franklin+Park+IL" target="_blank" class="contact-card">
           <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
           <h4>Location</h4>
           <p>Franklin Park / Bensenville</p>
         </a>
-
-        <!-- Instagram -->
         <a href="https://instagram.com/royal_detailing3" target="_blank" class="contact-card">
           <div class="contact-icon"><i class="fab fa-instagram"></i></div>
           <h4>Instagram</h4>
           <p>@royal_detailing3</p>
         </a>
-
       </div>
-
     </div>
   </section>
 
-  <!-- ===================== FOOTER ===================== -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
@@ -556,8 +456,6 @@
     </div>
   </footer>
 
-  <!-- Link to our JavaScript file - placed at the BOTTOM of body so the HTML loads first -->
   <script src="js/script.js"></script>
-
 </body>
 </html>
