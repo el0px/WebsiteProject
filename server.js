@@ -119,19 +119,23 @@ app.post('/book', async (req, res) => {
     return res.status(400).json({ success: false, message: 'Missing required fields.' });
   }
 
-  // Check if date is blocked
+  // Check if date is blocked — skip gracefully if DB is unreachable
   if (date) {
-    const { data: blocked } = await supabase
-      .from('blocked_dates')
-      .select('date')
-      .eq('date', date)
-      .single();
+    try {
+      const { data: blocked } = await supabase
+        .from('blocked_dates')
+        .select('date')
+        .eq('date', date)
+        .single();
 
-    if (blocked) {
-      return res.status(400).json({
-        success: false,
-        message: 'Sorry, that date is unavailable. Please choose another date.'
-      });
+      if (blocked) {
+        return res.status(400).json({
+          success: false,
+          message: 'Sorry, that date is unavailable. Please choose another date.'
+        });
+      }
+    } catch (err) {
+      console.warn('Could not check blocked dates (DB may be unavailable):', err.message);
     }
   }
 
@@ -145,27 +149,31 @@ app.post('/book', async (req, res) => {
     addonsText = addonsArray.join(', ');
   }
 
-  // Save booking to database
-  const { data: booking, error: dbError } = await supabase
-    .from('bookings')
-    .insert([{
-      name,
-      contact,
-      date,
-      time,
-      service_type: serviceType,
-      vehicle,
-      addons: addonsText,
-      condition,
-      notes,
-      status: 'pending'
-    }])
-    .select()
-    .single();
+  // Try to save booking to database — don't block email if this fails
+  let dbSaved = false;
+  try {
+    const { error: dbError } = await supabase
+      .from('bookings')
+      .insert([{
+        name,
+        contact,
+        date,
+        time,
+        service_type: serviceType,
+        vehicle,
+        addons: addonsText,
+        condition,
+        notes,
+        status: 'pending'
+      }]);
 
-  if (dbError) {
-    console.error('Database error:', dbError.message);
-    return res.status(500).json({ success: false, message: 'Something went wrong. Please call or text us directly.' });
+    if (dbError) {
+      console.error('Database insert error:', dbError.message);
+    } else {
+      dbSaved = true;
+    }
+  } catch (err) {
+    console.error('Database unreachable (project may be paused):', err.message);
   }
 
   // ── EMAIL 1: Notification to the business ─────────────────────
@@ -255,6 +263,7 @@ app.post('/book', async (req, res) => {
     </div>
   `;
 
+  let emailSent = false;
   try {
     const { error: bizEmailError } = await resend.emails.send({
       from:    'Royal Detailing Bookings <bookings@royal-detailing.org>',
@@ -262,8 +271,12 @@ app.post('/book', async (req, res) => {
       subject: `New Booking — ${name} | ${serviceLabel}`,
       html:    businessHtml,
     });
-    if (bizEmailError) console.error('Business email error:', JSON.stringify(bizEmailError));
-    else console.log('Business email sent to:', process.env.EMAIL_TO);
+    if (bizEmailError) {
+      console.error('Business email error:', JSON.stringify(bizEmailError));
+    } else {
+      emailSent = true;
+      console.log('Business email sent to:', process.env.EMAIL_TO);
+    }
 
     const { error: custEmailError } = await resend.emails.send({
       from:    'Royal Detailing <bookings@royal-detailing.org>',
@@ -274,19 +287,20 @@ app.post('/book', async (req, res) => {
     if (custEmailError) console.error('Customer email error:', JSON.stringify(custEmailError));
     else console.log('Customer email sent to:', contact);
 
-    // Send SMS to business
     await sendSMS(process.env.BUSINESS_PHONE,
       `New booking from ${name}!\nService: ${serviceLabel}\nDate: ${formattedDate}\nContact: ${contact}\nVehicle: ${vehicle || 'N/A'}\nCheck admin panel to confirm.`
     );
-
-    console.log(`Booking saved and notification sent for: ${name}`);
-    res.status(200).json({ success: true, message: 'Booking request received! We will contact you within 24 hours.' });
-
   } catch (error) {
     console.error('Email send failed:', error.message);
-    // Booking was saved to DB even if email failed
-    res.status(200).json({ success: true, message: 'Booking request received! We will contact you within 24 hours.' });
   }
+
+  if (!dbSaved && !emailSent) {
+    console.error(`BOOKING LOST — DB and email both failed for: ${name} (${contact})`);
+    return res.status(500).json({ success: false, message: 'Something went wrong. Please call or text us directly at (708) 714-2432.' });
+  }
+
+  console.log(`Booking processed — DB saved: ${dbSaved}, Email sent: ${emailSent} — ${name}`);
+  res.status(200).json({ success: true, message: 'Booking request received! We will contact you within 24 hours.' });
 });
 
 // ── ADMIN: Get all bookings ─────────────────────────────────────
