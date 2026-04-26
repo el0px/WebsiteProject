@@ -10,7 +10,6 @@ Live site: [royal-detailing.org](https://royal-detailing.org)
 
 - **Online booking form** — customers select a service, date, vehicle info, and add-ons
 - **Automated email notifications** — confirmation email sent to the customer instantly, notification email sent to the business on every new booking
-- **SMS alerts** — business receives a text message via Twilio on every new booking
 - **Admin panel** — password-protected dashboard to view all bookings, confirm or reject appointments, and block unavailable dates
 - **Blocked date system** — admin can block dates which are hidden from the booking calendar in real time
 - **Customer status emails** — customers receive a confirmation or rejection email when the admin acts on their booking
@@ -32,9 +31,6 @@ Live site: [royal-detailing.org](https://royal-detailing.org)
 
 **Email**
 - Resend API
-
-**SMS**
-- Twilio
 
 **Deployment**
 - Cloud-hosted with custom domain (royal-detailing.org)
@@ -88,10 +84,6 @@ SUPABASE_URL=your_supabase_url
 SUPABASE_ANON_KEY=your_supabase_anon_key
 RESEND_API_KEY=your_resend_api_key
 EMAIL_TO=business_email@example.com
-TWILIO_ACCOUNT_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_token
-TWILIO_PHONE_NUMBER=your_twilio_number
-BUSINESS_PHONE=business_phone_number
 ADMIN_PASSWORD=your_admin_password
 PORT=4000
 ```
@@ -113,7 +105,7 @@ npm start
 3. Backend checks if the requested date is blocked
 4. Booking is saved to the Supabase database
 5. Customer receives an automated confirmation email via Resend
-6. Business receives a notification email and SMS via Twilio
+6. Business receives a notification email via Resend
 7. Admin logs into `/admin` to confirm or reject the booking
 8. Customer receives a follow-up email with the booking status
 

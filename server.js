@@ -13,33 +13,12 @@ const cors           = require('cors');
 const path           = require('path');
 const { Resend }     = require('resend');
 const { createClient } = require('@supabase/supabase-js');
-const twilio           = require('twilio');
 
 require('dotenv').config();
 
 const app    = express();
 const PORT   = process.env.PORT || 4000;
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Twilio client — for sending SMS
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-
-// Helper to send a text message (silently fails if SMS isn't set up)
-async function sendSMS(to, body) {
-  try {
-    if (!to || !process.env.TWILIO_PHONE_NUMBER) return;
-    // Format number: strip non-digits and add +1 if needed
-    const cleaned = to.replace(/\D/g, '');
-    const formatted = cleaned.startsWith('1') ? `+${cleaned}` : `+1${cleaned}`;
-    await twilioClient.messages.create({
-      body,
-      from: process.env.TWILIO_PHONE_NUMBER,
-      to:   formatted,
-    });
-  } catch (err) {
-    console.error('SMS failed:', err.message);
-  }
-}
 
 // Supabase client — connects to our database
 const supabase = createClient(
@@ -287,9 +266,6 @@ app.post('/book', async (req, res) => {
     if (custEmailError) console.error('Customer email error:', JSON.stringify(custEmailError));
     else console.log('Customer email sent to:', contact);
 
-    await sendSMS(process.env.BUSINESS_PHONE,
-      `New booking from ${name}!\nService: ${serviceLabel}\nDate: ${formattedDate}\nContact: ${contact}\nVehicle: ${vehicle || 'N/A'}\nCheck admin panel to confirm.`
-    );
   } catch (error) {
     console.error('Email send failed:', error.message);
   }
@@ -399,8 +375,8 @@ app.delete('/admin/blocked-dates/:date', requireAdmin, async (req, res) => {
   res.json({ success: true });
 });
 
-// SPA fallback — serve index.html for any non-API route
-app.get('*', (req, res) => {
+// SPA fallback — serve index.html for any non-API GET route
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
 });
 
