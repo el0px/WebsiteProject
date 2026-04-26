@@ -10,6 +10,7 @@
 
 const express        = require('express');
 const cors           = require('cors');
+const fs             = require('fs');
 const path           = require('path');
 const { Resend }     = require('resend');
 const { createClient } = require('@supabase/supabase-js');
@@ -19,6 +20,11 @@ require('dotenv').config();
 const app    = express();
 const PORT   = process.env.PORT || 4000;
 const resend = new Resend(process.env.RESEND_API_KEY);
+const clientDistPath = path.join(__dirname, 'client', 'dist');
+const clientIndexPath = path.join(clientDistPath, 'index.html');
+const publicIndexPath = fs.existsSync(clientIndexPath)
+  ? clientIndexPath
+  : path.join(__dirname, 'index.html');
 
 // Supabase client — connects to our database
 const supabase = createClient(
@@ -29,7 +35,11 @@ const supabase = createClient(
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'client', 'dist')));
+app.use(express.static(clientDistPath));
+// Serve root static assets so the legacy index.html fallback loads correctly
+app.use('/css',    express.static(path.join(__dirname, 'css')));
+app.use('/js',     express.static(path.join(__dirname, 'js')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Simple admin auth middleware
 function requireAdmin(req, res, next) {
@@ -377,7 +387,7 @@ app.delete('/admin/blocked-dates/:date', requireAdmin, async (req, res) => {
 
 // SPA fallback — serve index.html for any non-API GET route
 app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+  res.sendFile(publicIndexPath);
 });
 
 app.listen(PORT, () => {
